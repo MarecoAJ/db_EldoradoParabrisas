@@ -125,6 +125,30 @@ ALTER TABLE `db_eldoradoparabrisas`.`presupuestos` ADD INDEX `tipos_presupuestos
 ALTER TABLE `db_eldoradoparabrisas`.`presupuestos` ADD CONSTRAINT `id_tipo_presup` FOREIGN KEY (`id_tipo_presup`)
 REFERENCES `db_eldoradoparabrisas`.`tipos_presupuestos` (`id_tipo_presup`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+CREATE TABLE `db_eldoradoparabrisas`.`precios_servicios` (
+  `id_precio_servicio` INT(6) NOT NULL,
+  `servicio_id` INT(4) NOT NULL,
+  `precio_servicio` DECIMAL(10,2) NOT NULL,
+  `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `estado` INT(1) NOT NULL DEFAULT 1
+  );
+
+ALTER TABLE `db_eldoradoparabrisas`.`precios_servicios` ADD INDEX `servicios_idx` (`servicio_id` ASC);
+ALTER TABLE `db_eldoradoparabrisas`.`precios_servicios` ADD CONSTRAINT `id_servicio` FOREIGN KEY (`id_servicio`)
+REFERENCES `db_eldoradoparabrisas`.`servicios` (`id_servicio`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE `db_eldoradoparabrisas`.`precios_productos` (
+  `id_precio_produc` INT(16) NOT NULL,
+  `produc_codigo` INT(15) NOT NULL,
+  `precio_produc` DECIMAL(10,2) NOT NULL,
+  `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `estado` INT(1) NOT NULL DEFAULT 1
+  );
+
+ALTER TABLE `db_eldoradoparabrisas`.`precios_productos` ADD INDEX `productos_idx` (`produc_codigo` ASC);
+ALTER TABLE `db_eldoradoparabrisas`.`precios_productos` ADD CONSTRAINT `codigo_produc` FOREIGN KEY (`codigo_produc`)
+REFERENCES `db_eldoradoparabrisas`.`productos` (`codigo_produc`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
 CREATE TABLE `db_eldoradoparabrisas`.`modelos` (
   `id_modelo` INT(6) PRIMARY KEY NOT NULL,
   `marca_id` INT(4) NOT NULL,
@@ -172,8 +196,9 @@ REFERENCES `db_eldoradoparabrisas`.`modelos` (`id_modelo`) ON DELETE NO ACTION O
 
 CREATE TABLE `db_eldoradoparabrisas`.`presup_produc` (
   `presup_id` INT(6) PRIMARY KEY NOT NULL,
-  `produc_codigo` INT(15) PRIMARY KEY NOT NULL,
+  `precio_produc_id` INT(16) NOT NULL,
   `cant_produc` INT(4) NOT NULL,
+  `subtotal_presup_produc` DECIMAL(10,2) NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `estado` INT(1) NOT NULL DEFAULT 1
 );
@@ -182,14 +207,15 @@ ALTER TABLE `db_eldoradoparabrisas`.`presup_produc` ADD INDEX `presupuestos_idx`
 ALTER TABLE `db_eldoradoparabrisas`.`presup_produc` ADD CONSTRAINT `id_presup` FOREIGN KEY (`id_presup`)
 REFERENCES `db_eldoradoparabrisas`.`presupuestos` (`id_presup`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-ALTER TABLE `db_eldoradoparabrisas`.`presup_produc` ADD INDEX `productos_idx` (`produc_codigo` ASC);
-ALTER TABLE `db_eldoradoparabrisas`.`presup_produc` ADD CONSTRAINT `codigo_produc` FOREIGN KEY (`codigo_produc`)
-REFERENCES `db_eldoradoparabrisas`.`productos` (`codigo_produc`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `db_eldoradoparabrisas`.`presup_produc` ADD INDEX `precios_productos_idx` (`precio_produc_id` ASC);
+ALTER TABLE `db_eldoradoparabrisas`.`presup_produc` ADD CONSTRAINT `id_precio_produc` FOREIGN KEY (`id_precio_produc`)
+REFERENCES `db_eldoradoparabrisas`.`precios_productos` (`id_precio_produc`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `db_eldoradoparabrisas`.`presup_servicio` (
   `presup_id` INT(6) PRIMARY KEY NOT NULL,
-  `servicio_id` INT(4) PRIMARY KEY NOT NULL,
+  `precio_servicio_id` INT(6) NOT NULL,
   `cant_servicio` INT(4) NOT NULL,
+  `subtotal_presup_servicio` DECIMAL(10,2) NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `estado` INT(1) NOT NULL DEFAULT 1
 );
@@ -198,9 +224,9 @@ ALTER TABLE `db_eldoradoparabrisas`.`presup_servicio` ADD INDEX `presupuestos_id
 ALTER TABLE `db_eldoradoparabrisas`.`presup_servicio` ADD CONSTRAINT `id_presup` FOREIGN KEY (`id_presup`)
 REFERENCES `db_eldoradoparabrisas`.`presupuestos` (`id_presup`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-ALTER TABLE `db_eldoradoparabrisas`.`presup_servicio` ADD INDEX `servicios_idx` (`servicio_id` ASC);
-ALTER TABLE `db_eldoradoparabrisas`.`presup_servicio` ADD CONSTRAINT `id_servicio` FOREIGN KEY (`id_servicio`)
-REFERENCES `db_eldoradoparabrisas`.`servicios` (`id_servicio`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `db_eldoradoparabrisas`.`presup_servicio` ADD INDEX `precios_servicios_idx` (`precio_servicio_id` ASC);
+ALTER TABLE `db_eldoradoparabrisas`.`presup_servicio` ADD CONSTRAINT `id_precio_servicio` FOREIGN KEY (`id_precio_servicio`)
+REFERENCES `db_eldoradoparabrisas`.`precios_servicios` (`id_precio_servicio`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `db_eldoradoparabrisas`.`ciudades` (
   `id_ciudad` INT(9) PRIMARY KEY NOT NULL,
