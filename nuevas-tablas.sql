@@ -75,6 +75,13 @@ CREATE TABLE `db_eldoradoparabrisas`.`seguros` (
 `estado` INT(1) NOT NULL DEFAULT 1
 );
 
+CREATE TABLE `db_eldoradoparabrisas`.`tipos_cheques` (
+`id_tipo_cheque` INT(4) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+`descrip_tipo_cheque` VARCHAR(35) NOT NULL,
+`fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+`estado` INT(1) NOT NULL DEFAULT 1
+);
+
 CREATE TABLE `db_eldoradoparabrisas`.`productos` (
   `codigo_produc` INT(15) PRIMARY KEY NOT NULL,
   `descrip_produc` VARCHAR(45) NOT NULL,
@@ -468,20 +475,25 @@ ALTER TABLE `db_eldoradoparabrisas`.`sucursales_bancos` ADD CONSTRAINT `id_direc
 REFERENCES `db_eldoradoparabrisas`.`direcciones` (`id_direccion`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `db_eldoradoparabrisas`.`cheques` (
-  `num_cheque` INT(25) NOT NULL,
+  `num_cheque` INT(25) PRIMARY KEY NOT NULL,
+  `tipo_cheque_id` INT(2) NOT NULL,
   `detalle_mov_id` INT(15) NOT NULL,
   `fecha_cheque` DATETIME NOT NULL,
   `fecha_cobro` DATETIME NOT NULL,
   `banco_id` INT(4) NOT NULL,
   `direccion_id` INT(15) NOT NULL,
   `cuit_dni` INT(15) NOT NULL,
-  `monto` DECIMAL(10,2) NOT NULL,
+  `monto_cheque` DECIMAL(10,2) NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `estado` INT(1) NOT NULL DEFAULT 1
 );
 
-ALTER TABLE `db_eldoradoparabrisas`.`tarjetas` ADD INDEX `detalles_movimientos_idx` (`detalle_mov_id` ASC);
-ALTER TABLE `db_eldoradoparabrisas`.`tarjetas` ADD CONSTRAINT `id_detalle_mov` FOREIGN KEY (`id_detalle_mov`)
+ALTER TABLE `db_eldoradoparabrisas`.`cheques` ADD INDEX `tipos_cheques_idx` (`tipo_cheque_id` ASC);
+ALTER TABLE `db_eldoradoparabrisas`.`cheques` ADD CONSTRAINT `id_tipo_cheque` FOREIGN KEY (`id_tipo_cheque`)
+REFERENCES `db_eldoradoparabrisas`.`tipos_cheques` (`id_tipo_cheque`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE `db_eldoradoparabrisas`.`cheques` ADD INDEX `detalles_movimientos_idx` (`detalle_mov_id` ASC);
+ALTER TABLE `db_eldoradoparabrisas`.`cheques` ADD CONSTRAINT `id_detalle_mov` FOREIGN KEY (`id_detalle_mov`)
 REFERENCES `db_eldoradoparabrisas`.`detalles_movimientos` (`id_detalle_mov`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ALTER TABLE `db_eldoradoparabrisas`.`cheques` ADD INDEX `sucursales_bancos_idx` (`banco_id` ASC);
@@ -496,3 +508,17 @@ ALTER TABLE `db_eldoradoparabrisas`.`cheques` ADD INDEX `personas_idx` (`cuit_dn
 ALTER TABLE `db_eldoradoparabrisas`.`cheques` ADD CONSTRAINT `dni_cuit` FOREIGN KEY (`dni_cuit`)
 REFERENCES `db_eldoradoparabrisas`.`personas` (`dni_cuit`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+CREATE TABLE `db_eldoradoparabrisas`.`cheque_endozo` (
+  `cheque_num` INT(25) PRIMARY KEY NOT NULL,
+  `cuit_dni` INT(15) PRIMARY KEY NOT NULL,
+  `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `estado` INT(1) NOT NULL DEFAULT 1
+);
+
+ALTER TABLE `db_eldoradoparabrisas`.`cheque_endozo` ADD INDEX `cheques_idx` (`cheque_num` ASC);
+ALTER TABLE `db_eldoradoparabrisas`.`cheque_endozo` ADD CONSTRAINT `num_cheque` FOREIGN KEY (`num_cheque`)
+REFERENCES `db_eldoradoparabrisas`.`cheques` (`num_cheque`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE `db_eldoradoparabrisas`.`cheque_endozo` ADD INDEX `personas_idx` (`cuit_dni` ASC);
+ALTER TABLE `db_eldoradoparabrisas`.`cheque_endozo` ADD CONSTRAINT `dni_cuit` FOREIGN KEY (`dni_cuit`)
+REFERENCES `db_eldoradoparabrisas`.`personas` (`dni_cuit`) ON DELETE NO ACTION ON UPDATE NO ACTION;
