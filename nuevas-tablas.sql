@@ -128,7 +128,7 @@ CREATE TABLE `db_eldoradoparabrisas`.`presupuestos` (
 );
 
 ALTER TABLE `db_eldoradoparabrisas`.`presupuestos` ADD INDEX `tipos_presupuestos_idx` (`tipo_presup_id` ASC);
-ALTER TABLE `db_eldoradoparabrisas`.`presupuestos` ADD CONSTRAINT `tipos_presupuetos_fk` FOREIGN KEY (`id_tipo_presup`)
+ALTER TABLE `db_eldoradoparabrisas`.`presupuestos` ADD CONSTRAINT `tipos_presupuestos_fk` FOREIGN KEY (`id_tipo_presup`)
 REFERENCES `db_eldoradoparabrisas`.`tipos_presupuestos` (`id_tipo_presup`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `db_eldoradoparabrisas`.`precios_servicios` (
