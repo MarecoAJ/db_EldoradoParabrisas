@@ -6,7 +6,7 @@ CREATE TABLE `db_eldoradoparabrisas`.`marcas` (
 );
 
 CREATE TABLE `db_eldoradoparabrisas`.`tipos_personas` (
-`id_tipo_persona` INT(3) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+`id_tipo_persona` INT(2) PRIMARY KEY NOT NULL AUTO_INCREMENT,
 `descrip_tipo_persona` VARCHAR(25) NOT NULL UNIQUE,
 `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 `estado` INT(1) NOT NULL DEFAULT 1
@@ -76,14 +76,14 @@ CREATE TABLE `db_eldoradoparabrisas`.`seguros` (
 );
 
 CREATE TABLE `db_eldoradoparabrisas`.`tipos_cheques` (
-`id_tipo_cheque` INT(4) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+`id_tipo_cheque` INT(2) PRIMARY KEY NOT NULL AUTO_INCREMENT,
 `descrip_tipo_cheque` VARCHAR(35) NOT NULL UNIQUE,
 `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 `estado` INT(1) NOT NULL DEFAULT 1
 );
 
 CREATE TABLE `db_eldoradoparabrisas`.`productos` (
-  `codigo_produc` INT(15) PRIMARY KEY NOT NULL,
+  `codigo_produc` VARCHAR(15) PRIMARY KEY NOT NULL,
   `descrip_produc` VARCHAR(45) NOT NULL,
   `marca_id` INT(4) NOT NULL,
   `cant_existencia` INT(4) NOT NULL,
@@ -108,7 +108,7 @@ ALTER TABLE `db_eldoradoparabrisas`.`provincias` ADD CONSTRAINT `paises_fk` FORE
 REFERENCES `db_eldoradoparabrisas`.`paises` (`id_pais`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `db_eldoradoparabrisas`.`personas` (
-  `dni_cuit` INT(15) PRIMARY KEY NOT NULL,
+  `dni_cuit` VARCHAR(15) PRIMARY KEY NOT NULL,
   `nombre_completo` VARCHAR(45) NOT NULL,
   `tipo_persona_id` INT(2) NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -144,8 +144,8 @@ ALTER TABLE `db_eldoradoparabrisas`.`precios_servicios` ADD CONSTRAINT `servicio
 REFERENCES `db_eldoradoparabrisas`.`servicios` (`id_servicio`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `db_eldoradoparabrisas`.`precios_productos` (
-  `id_precio_produc` INT(16) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `produc_codigo` INT(15) NOT NULL,
+  `id_precio_produc` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `produc_codigo` VARCHAR(15) NOT NULL,
   `precio_produc` DECIMAL(10,2) NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `estado` INT(1) NOT NULL DEFAULT 1
@@ -181,7 +181,7 @@ REFERENCES `db_eldoradoparabrisas`.`modelos` (`id_modelo`) ON DELETE NO ACTION O
 
 CREATE TABLE `db_eldoradoparabrisas`.`cristales` (
   `tipo_cristal_id` INT(4) PRIMARY KEY NOT NULL,
-  `produc_codigo` INT(15) PRIMARY KEY NOT NULL,
+  `produc_codigo` VARCHAR(15) PRIMARY KEY NOT NULL,
   `modelo_id` INT(6) NOT NULL,
   `cant_minima` INT(4) NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -202,7 +202,7 @@ REFERENCES `db_eldoradoparabrisas`.`modelos` (`id_modelo`) ON DELETE NO ACTION O
 
 CREATE TABLE `db_eldoradoparabrisas`.`presup_produc` (
   `presup_id` INT(6) PRIMARY KEY NOT NULL,
-  `precio_produc_id` INT(16) PRIMARY KEY NOT NULL,
+  `precio_produc_id` INT PRIMARY KEY NOT NULL,
   `cant_produc` INT(4) NOT NULL,
   `subtotal_presup_produc` DECIMAL(10,2) NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -248,9 +248,9 @@ ALTER TABLE `db_eldoradoparabrisas`.`ciudades` ADD CONSTRAINT `provincias_fk` FO
 REFERENCES `db_eldoradoparabrisas`.`provincias` (`id_provincia`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `db_eldoradoparabrisas`.`pedidos` (
-  `id_pedido` INT(9) PRIMARY KEY NOT NULL,
+  `id_pedido` INT PRIMARY KEY NOT NULL,
   `fecha_pedido` DATETIME NOT NULL,
-  `produc_codigo` INT(15) NOT NULL,
+  `produc_codigo` VARCHAR(15) NOT NULL,
   `cant_pedida` INT(3) NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `estado` INT(1) NOT NULL DEFAULT 1
@@ -262,9 +262,9 @@ REFERENCES `db_eldoradoparabrisas`.`productos` (`codigo_produc`) ON DELETE NO AC
 
 CREATE TABLE `db_eldoradoparabrisas`.`asegurados` (
   `seguro_id` INT(4) PRIMARY KEY NOT NULL,
-  `cuit_dni` INT(15) PRIMARY KEY NOT NULL,
-  `num_poliza` INT(25) NOT NULL,
-  `num_siniestro` INT(25) NOT NULL,
+  `cuit_dni` VARCHAR(15) PRIMARY KEY NOT NULL,
+  `num_poliza` VARCHAR(25) NOT NULL,
+  `num_siniestro` VARCHAR(25) NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `estado` INT(1) NOT NULL DEFAULT 1
 );
@@ -278,9 +278,9 @@ ALTER TABLE `db_eldoradoparabrisas`.`asegurados` ADD CONSTRAINT `personas_fk` FO
 REFERENCES `db_eldoradoparabrisas`.`personas` (`dni_cuit`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `db_eldoradoparabrisas`.`movimientos` (
-  `id_movimiento` INT(9) PRIMARY KEY NOT NULL,
+  `id_movimiento` INT PRIMARY KEY NOT NULL,
   `tipo_mov_id` INT(2) NOT NULL,
-  `num_factura` INT(15) NOT NULL,
+  `num_factura` VARCHAR(15) NOT NULL,
   `presup_id` INT(6) NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `estado` INT(1) NOT NULL DEFAULT 1
@@ -296,7 +296,7 @@ REFERENCES `db_eldoradoparabrisas`.`presupuestos` (`id_presup`) ON DELETE NO ACT
 
 CREATE TABLE `db_eldoradoparabrisas`.`contactos` (
   `id_contacto` INT(6) PRIMARY KEY NOT NULL,
-  `cuit_dni` INT(15) NOT NULL,
+  `cuit_dni` VARCHAR(15) NOT NULL,
   `correo_electronico` VARCHAR(45) NOT NULL UNIQUE,
   `tel_fijo` VARCHAR(18) NOT NULL,
   `tel_celular` VARCHAR(18) NOT NULL,
@@ -321,7 +321,7 @@ ALTER TABLE `db_eldoradoparabrisas`.`turnos` ADD CONSTRAINT `vehiculos_fk` FOREI
 REFERENCES `db_eldoradoparabrisas`.`vehiculos` (`dominio_vehiculo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `db_eldoradoparabrisas`.`direcciones` (
-  `id_direccion` INT(15) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `id_direccion` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `ciudad_id` INT(9) NOT NULL,
   `calle` VARCHAR(35) NOT NULL,
   `numero` INT(6) NOT NULL,
@@ -338,8 +338,8 @@ REFERENCES `db_eldoradoparabrisas`.`ciudades` (`id_ciudad`) ON DELETE NO ACTION 
 CREATE TABLE `db_eldoradoparabrisas`.`examenes_vehiculos` (
   `num_examen` INT(9) PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `dominio_vehiculo` VARCHAR(15) NOT NULL,
-  `cuit_dni` INT(15) NOT NULL,
-  `examinador` INT(15) NOT NULL,
+  `cuit_dni` VARCHAR(15) NOT NULL,
+  `examinador` VARCHAR(15) NOT NULL,
   `fecha_hora` DATETIME NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `estado` INT(1) NOT NULL DEFAULT 1
@@ -358,8 +358,8 @@ ALTER TABLE `db_eldoradoparabrisas`.`examen_vehiculo` ADD CONSTRAINT `personas_e
 REFERENCES `db_eldoradoparabrisas`.`personas` (`dni_cuit`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `db_eldoradoparabrisas`.`detalles_movimientos` (
-  `id_detalle_mov` INT(15) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `movimiento_id` INT(9) NOT NULL,
+  `id_detalle_mov` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `movimiento_id` INT NOT NULL,
   `tipo_pago_id` INT(2) NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `estado` INT(1) NOT NULL DEFAULT 1
@@ -374,9 +374,9 @@ ALTER TABLE `db_eldoradoparabrisas`.`detalles_movimientos` ADD CONSTRAINT `tipos
 REFERENCES `db_eldoradoparabrisas`.`tipos_pagos` (`id_tipo_pago`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `db_eldoradoparabrisas`.`movimientos_seguros` (
-  `movimiento_id` INT(9) PRIMARY KEY NOT NULL,
+  `movimiento_id` INT PRIMARY KEY NOT NULL,
   `seguro_id` INT(4) PRIMARY KEY NOT NULL,
-  `cuit_dni` INT(15) PRIMARY KEY NOT NULL,
+  `cuit_dni` VARCHAR(15) PRIMARY KEY NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `estado` INT(1) NOT NULL DEFAULT 1
 );
@@ -390,8 +390,8 @@ ALTER TABLE `db_eldoradoparabrisas`.`movimientos_seguros` ADD CONSTRAINT `asegur
 REFERENCES `db_eldoradoparabrisas`.`asegurados` (`id_seguro`, `dni_cuit`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `db_eldoradoparabrisas`.`direccion_persona` (
-  `cuit_dni` INT(15) PRIMARY KEY NOT NULL,
-  `direccion_id` INT(15) PRIMARY KEY NOT NULL,
+  `cuit_dni` VARCHAR(15) PRIMARY KEY NOT NULL,
+  `direccion_id` INT PRIMARY KEY NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `estado` INT(1) NOT NULL DEFAULT 1
 );
@@ -405,7 +405,7 @@ ALTER TABLE `db_eldoradoparabrisas`.`direccion_persona` ADD CONSTRAINT `direccio
 REFERENCES `db_eldoradoparabrisas`.`direcciones` (`id_direccion`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `db_eldoradoparabrisas`.`detalles_examen` (
-  `id_detalle` INT(10) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `id_detalle` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `examen_num` INT(9) NOT NULL,
   `descrip_detalle` TEXT NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -417,8 +417,8 @@ ALTER TABLE `db_eldoradoparabrisas`.`detalles_examen` ADD CONSTRAINT `examenes_v
 REFERENCES `db_eldoradoparabrisas`.`examenes_vehiculos` (`num_examen`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `db_eldoradoparabrisas`.`efectivo` (
-  `id_efectivo` INT(15) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `detalle_mov_id` INT(15) NOT NULL,
+  `id_efectivo` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `detalle_mov_id` INT NOT NULL,
   `monto_efec` DECIMAL(10,2) NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `estado` INT(1) NOT NULL DEFAULT 1
@@ -429,13 +429,13 @@ ALTER TABLE `db_eldoradoparabrisas`.`efectivo` ADD CONSTRAINT `detalles_movimien
 REFERENCES `db_eldoradoparabrisas`.`detalles_movimientos` (`id_detalle_mov`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `db_eldoradoparabrisas`.`tarjetas` (
-  `id_tarjeta` INT(15) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `detalle_mov_id` INT(15) NOT NULL,
+  `id_tarjeta` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `detalle_mov_id` INT NOT NULL,
   `tipo_tarjeta_id` INT(2) NOT NULL,
   `banco_id` INT(4) NULL,
-  `num_comp` INT(15) NOT NULL,
+  `num_comp` VARCHAR(15) NOT NULL,
   `num_lote` INT(6) NOT NULL,
-  `num_tarjeta` INT(25) NOT NULL,
+  `num_tarjeta` VARCHAR(25) NOT NULL,
   `monto_tarjetas` DECIMAL(10,2) NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `estado` INT(1) NOT NULL DEFAULT 1
@@ -455,7 +455,7 @@ REFERENCES `db_eldoradoparabrisas`.`bancos` (`id_banco`) ON DELETE NO ACTION ON 
 
 CREATE TABLE `db_eldoradoparabrisas`.`sucursales_bancos` (
   `banco_id` INT(6) PRIMARY KEY NOT NULL,
-  `direccion_id` INT(15) PRIMARY KEY NOT NULL,
+  `direccion_id` INT PRIMARY KEY NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `estado` INT(1) NOT NULL DEFAULT 1
 );
@@ -469,14 +469,14 @@ ALTER TABLE `db_eldoradoparabrisas`.`sucursales_bancos` ADD CONSTRAINT `direccio
 REFERENCES `db_eldoradoparabrisas`.`direcciones` (`id_direccion`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `db_eldoradoparabrisas`.`cheques` (
-  `num_cheque` INT(25) PRIMARY KEY NOT NULL,
+  `num_cheque` VARCHAR(25) PRIMARY KEY NOT NULL,
   `tipo_cheque_id` INT(2) NOT NULL,
-  `detalle_mov_id` INT(15) NOT NULL,
+  `detalle_mov_id` INT NOT NULL,
   `fecha_cheque` DATETIME NOT NULL,
   `fecha_cobro` DATETIME NOT NULL,
   `banco_id` INT(4) NOT NULL,
-  `direccion_id` INT(15) NOT NULL,
-  `cuit_dni` INT(15) NOT NULL,
+  `direccion_id` INT NOT NULL,
+  `cuit_dni` VARCHAR(15) NOT NULL,
   `monto_cheque` DECIMAL(10,2) NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `estado` INT(1) NOT NULL DEFAULT 1
@@ -499,8 +499,8 @@ ALTER TABLE `db_eldoradoparabrisas`.`cheques` ADD CONSTRAINT `personas_fk` FOREI
 REFERENCES `db_eldoradoparabrisas`.`personas` (`dni_cuit`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `db_eldoradoparabrisas`.`cheque_endozo` (
-  `cheque_num` INT(25) PRIMARY KEY NOT NULL,
-  `cuit_dni` INT(15) PRIMARY KEY NOT NULL,
+  `cheque_num` VARCHAR(25) PRIMARY KEY NOT NULL,
+  `cuit_dni` VARCHAR(15) PRIMARY KEY NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `estado` INT(1) NOT NULL DEFAULT 1
 );
