@@ -22,10 +22,6 @@ INSERT INTO `tipos_cheques`(`descrip_tipo_cheque`) VALUES ('propio');
 INSERT INTO `tipos_cheques`(`descrip_tipo_cheque`) VALUES ('tercero');
 INSERT INTO `tipos_cheques`(`descrip_tipo_cheque`) VALUES ('diferido');
 
-INSERT INTO `tipos_cristales`(`descrip_tipo_cristal`) VALUES ('Parabrisa con antena');
-INSERT INTO `tipos_cristales`(`descrip_tipo_cristal`) VALUES ('luneta terminca');
-INSERT INTO `tipos_cristales`(`descrip_tipo_cristal`) VALUES ('PDI');
-
 INSERT INTO `tipos_movimientos`(`descrip_tipo_mov`) VALUES ('INGRESO');
 INSERT INTO `tipos_movimientos`(`descrip_tipo_mov`) VALUES ('EGRESO');
 
