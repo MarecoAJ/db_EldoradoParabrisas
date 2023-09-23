@@ -137,6 +137,18 @@ ALTER TABLE `db_eldoradoparabrisas`.`presupuestos` ADD INDEX `tipos_presupuestos
 ALTER TABLE `db_eldoradoparabrisas`.`presupuestos` ADD CONSTRAINT `tipos_presupuestos_fk` FOREIGN KEY (`tipo_presup_id`)
 REFERENCES `db_eldoradoparabrisas`.`tipos_presupuestos` (`id_tipo_presup`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+CREATE TABLE `db_eldoradoparabrisas`.`movimientos` (
+  `id_movimiento` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `tipo_mov_id` INT NOT NULL,
+  `num_factura` BIGINT NOT NULL,
+  `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `estado` INT NOT NULL DEFAULT 1
+);
+
+ALTER TABLE `db_eldoradoparabrisas`.`movimientos` ADD INDEX `tipos_movimientos_idx` (`tipo_mov_id` ASC);
+ALTER TABLE `db_eldoradoparabrisas`.`movimientos` ADD CONSTRAINT `tipos_movimientos_fk` FOREIGN KEY (`tipo_mov_id`)
+REFERENCES `db_eldoradoparabrisas`.`tipos_movimientos` (`id_tipo_mov`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
 /* TABLE NIVEL 3 */
 CREATE TABLE `db_eldoradoparabrisas`.`productos` (
   `codigo_produc` BIGINT PRIMARY KEY NOT NULL,
@@ -201,22 +213,38 @@ ALTER TABLE `db_eldoradoparabrisas`.`asegurados` ADD INDEX `personas_idx` (`cuit
 ALTER TABLE `db_eldoradoparabrisas`.`asegurados` ADD CONSTRAINT `personas_asegurados_fk` FOREIGN KEY (`cuit_dni`)
 REFERENCES `db_eldoradoparabrisas`.`personas` (`dni_cuit`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-CREATE TABLE `db_eldoradoparabrisas`.`movimientos` (
-  `id_movimiento` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `tipo_mov_id` INT NOT NULL,
-  `num_factura` BIGINT NOT NULL,
+CREATE TABLE `db_eldoradoparabrisas`.`presupuestos_movimientos` (
+  `movimiento_id` INT NOT NULL,
   `presup_id` INT NOT NULL,
   `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `estado` INT NOT NULL DEFAULT 1
 );
 
-ALTER TABLE `db_eldoradoparabrisas`.`movimientos` ADD INDEX `tipos_movimientos_idx` (`tipo_mov_id` ASC);
-ALTER TABLE `db_eldoradoparabrisas`.`movimientos` ADD CONSTRAINT `tipos_movimientos_fk` FOREIGN KEY (`tipo_mov_id`)
-REFERENCES `db_eldoradoparabrisas`.`tipos_movimientos` (`id_tipo_mov`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `db_eldoradoparabrisas`.`presupuestos_movimientos` ADD CONSTRAINT `presupuestos_movimientos_pk` PRIMARY KEY (`movimiento_id`, `presup_id`);
 
-ALTER TABLE `db_eldoradoparabrisas`.`movimientos` ADD INDEX `presupuestos_idx` (`presup_id` ASC);
-ALTER TABLE `db_eldoradoparabrisas`.`movimientos` ADD CONSTRAINT `presupuestos_movimientos_fk` FOREIGN KEY (`presup_id`)
+ALTER TABLE `db_eldoradoparabrisas`.`presupuestos_movimientos` ADD INDEX `presupuestos_idx` (`presup_id` ASC);
+ALTER TABLE `db_eldoradoparabrisas`.`presupuestos_movimientos` ADD CONSTRAINT `presup_mov_presup_fk` FOREIGN KEY (`presup_id`)
 REFERENCES `db_eldoradoparabrisas`.`presupuestos` (`id_presup`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE `db_eldoradoparabrisas`.`presupuestos_movimientos` ADD INDEX `movimientos_idx` (`movimiento_id` ASC);
+ALTER TABLE `db_eldoradoparabrisas`.`presupuestos_movimientos` ADD CONSTRAINT `movimientos_mov_presup_fk` FOREIGN KEY (`movimiento_id`)
+REFERENCES `db_eldoradoparabrisas`.`movimientos` (`id_movimiento`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE `db_eldoradoparabrisas`.`detalles_movimientos` (
+  `id_detalle_mov` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `movimiento_id` INT NOT NULL,
+  `tipo_pago_id` INT NOT NULL,
+  `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `estado` INT NOT NULL DEFAULT 1
+);
+
+ALTER TABLE `db_eldoradoparabrisas`.`detalles_movimientos` ADD INDEX `movimientos_idx` (`movimiento_id` ASC);
+ALTER TABLE `db_eldoradoparabrisas`.`detalles_movimientos` ADD CONSTRAINT `movimientos_det_mov_fk` FOREIGN KEY (`movimiento_id`)
+REFERENCES `db_eldoradoparabrisas`.`movimientos` (`id_movimiento`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE `db_eldoradoparabrisas`.`detalles_movimientos` ADD INDEX `tipos_pagos_idx` (`tipo_pago_id` ASC);
+ALTER TABLE `db_eldoradoparabrisas`.`detalles_movimientos` ADD CONSTRAINT `tipos_pagos_fk` FOREIGN KEY (`tipo_pago_id`)
+REFERENCES `db_eldoradoparabrisas`.`tipos_pagos` (`id_tipo_pago`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `db_eldoradoparabrisas`.`contactos` (
   `id_contacto` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -311,21 +339,7 @@ ALTER TABLE `db_eldoradoparabrisas`.`movimientos_seguros` ADD INDEX `asegurados_
 ALTER TABLE `db_eldoradoparabrisas`.`movimientos_seguros` ADD CONSTRAINT `asegurados_fk` FOREIGN KEY (`id_seguro`, `dni_cuit`)
 REFERENCES `db_eldoradoparabrisas`.`asegurados` (`id_seguro`, `dni_cuit`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-CREATE TABLE `db_eldoradoparabrisas`.`detalles_movimientos` (
-  `id_detalle_mov` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `movimiento_id` INT NOT NULL,
-  `tipo_pago_id` INT NOT NULL,
-  `fecha_insercion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `estado` INT NOT NULL DEFAULT 1
-);
 
-ALTER TABLE `db_eldoradoparabrisas`.`detalles_movimientos` ADD INDEX `movimientos_idx` (`movimiento_id` ASC);
-ALTER TABLE `db_eldoradoparabrisas`.`detalles_movimientos` ADD CONSTRAINT `movimientos_fk` FOREIGN KEY (`id_movimiento`)
-REFERENCES `db_eldoradoparabrisas`.`movimientos` (`id_movimiento`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
-ALTER TABLE `db_eldoradoparabrisas`.`detalles_movimientos` ADD INDEX `tipos_pagos_idx` (`tipo_pago_id` ASC);
-ALTER TABLE `db_eldoradoparabrisas`.`detalles_movimientos` ADD CONSTRAINT `tipos_pagos_fk` FOREIGN KEY (`id_tipo_pago`)
-REFERENCES `db_eldoradoparabrisas`.`tipos_pagos` (`id_tipo_pago`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `db_eldoradoparabrisas`.`turnos` (
   `id_turno` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
